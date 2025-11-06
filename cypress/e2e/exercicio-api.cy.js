@@ -6,7 +6,7 @@ import userSchema from '../contracts/usuarios.contract';
 describe('Testes da Funcionalidade Usuários', () => {
   
   beforeEach(() => {
-    cy.token('fulano@qa.com', 'teste').then((tkn) => {
+    cy.token('beltrano@qa.com', 'teste').then((tkn) => {
       cy.wrap(tkn).as('token');
     });
   });
@@ -54,18 +54,15 @@ describe('Testes da Funcionalidade Usuários', () => {
     cy.editarUsuario().then(({ user, response }) => {
       
       const userId = response.body._id;
-      const updatedUser = {
-        nome: user.nome + '_edit',
-        email: faker.internet.email(),
-        password: user.password,
-        
-        
-    };
 
     cy.request({
       method: 'PUT',
       url: `/usuarios/${userId}`,
-      body: updatedUser
+      body: {
+        nome: user.nome + '_edit',
+        email: faker.internet.email(),
+        password: user.password
+      }
     }).then((updateResponse) => {
       expect(updateResponse.body.message).to.eq('Registro alterado com sucesso');
     });
@@ -73,7 +70,7 @@ describe('Testes da Funcionalidade Usuários', () => {
   });
 
   it('Deve deletar um usuário previamente cadastrado', () => {
-    cy.cadastrarUsuario().then(({ response }) => {
+    cy.editarUsuario().then(({ response }) => {
 
       const userId = response.body._id;
 

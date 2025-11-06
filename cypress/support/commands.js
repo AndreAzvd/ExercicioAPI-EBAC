@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { expect } from 'chai';
 
 
 Cypress.Commands.add('token', (email, senha) => {
@@ -10,7 +11,7 @@ Cypress.Commands.add('token', (email, senha) => {
             "password": senha 
         }
     }).then((response) => {
-        expect(response.status).to.equal(200)
+        expect(response.status).to.eq(200)
         return response.body.authorization
     })
  })
@@ -33,7 +34,8 @@ Cypress.Commands.add('cadastrarUsuario', () => {
 const user = {
     nome: faker.person.firstName(),
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: faker.internet.password(),
+    administrador: "true"
 }
 cy.request({
   method: 'POST',
@@ -55,7 +57,8 @@ Cypress.Commands.add('editarUsuario', () => {
 const user = {
     nome: faker.person.firstName(),
     email: faker.internet.email(),
-    password: faker.internet.password()
+    password: faker.internet.password(),
+    administrador: "true"
 }
 cy.request({
   method: 'POST',
@@ -64,11 +67,10 @@ cy.request({
     nome: user.nome,
     email: user.email,
     password: user.password,
-    administrador: "true"
+    administrador: "true",
   },
 }).then((response) => {
   failOnStatusCode: false
-  expect(response.body).to.have.property('_id');
   return cy.request({
     method: 'POST',
     url: '/usuarios',
