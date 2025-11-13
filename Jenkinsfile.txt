@@ -1,18 +1,31 @@
 pipeline {
     agent any
-    tools {
-        nodejs "nodejs"
-    }
+
     stages {
-        stage('Setup') {
+
+        stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/EBAC-QE/ebac-cypress-samples.git'
-                sh 'npm install'
+                git branch: 'main',
+                    url: 'https://github.com/AndreAzvd/ExercicioAPI-EBAC'
             }
         }
-        stage('Test') {
+
+        stage('Instalar Dependências') {
             steps {
-                sh 'NO_COLOR=1 npm test'
+                bat 'npm install'
+            }
+        }
+
+        stage('Instalar Cypress') {
+            steps {
+                // Garante que o Cypress está instalado no ambiente do Jenkins
+                bat 'npx cypress install'
+            }
+        }
+
+        stage('Executar Testes') {
+            steps {
+                bat 'npx cypress run'
             }
         }
     }
