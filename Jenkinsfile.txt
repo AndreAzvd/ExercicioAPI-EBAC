@@ -16,16 +16,12 @@ pipeline {
             }
         }
 
-        stage('Instalar Cypress') {
-            steps {
-                // Garante que o Cypress está instalado no ambiente do Jenkins
-                bat 'npx cypress install'
-            }
-        }
-
         stage('Executar Testes') {
             steps {
-                bat 'npx cypress run'
+                bat '''
+                    set NO_COLOR=1
+                    npx cypress run
+                '''
             }
         }
     }
